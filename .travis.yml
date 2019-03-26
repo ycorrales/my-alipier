@@ -1,0 +1,12 @@
+dist: trusty
+language: minimal
+services:
+  - docker
+script: ./run-tests.sh
+branches:
+  only:
+    - master
+    - /^v\d+\.\d+(\.\d+)?(-rc\d+)?$/
+env:
+  global:
+    secure: QCJPzOZcx0ht0uUKkHxHvkdprCsdJj80L6WRmvG6AYxWdSbr0QdyJXvsFqBTLpNrWMITBpxZLh3/LN1aCQ4Usvu1Q+1AuwiB6ml0pWLD1O6NfKpUFKNA92iFzuZDqJXaieXJyN+8cZ3BiUCB+W2is22PyOozEm7vBWXJ1ix2tx8lvSmaBcqOh/8hrX3zTcHEor0Ol8q9wLLti7Rt2aPixbMIaDqkIT6xSMIaj/p5AY68m+UOhR4wEOqA7sU55oK88VwCjaAAthX8CgI1qa7y/45/QNTqQwxyArvZJN60G/+YR4mOOJNZvRbRugtVspfUzTJ07pgXvcIH3qqejY+zosMmN71X9fH45y6ufdgkE1tC+VIu82RrS+8d3TSX0lFRgayXjH0U89tnqSX9FtVmGyL13kMPq0c9EwfZCuplooACpiDJ3ATj6afk7jtWDWKq8tgpuIjm3uf9TXZQ0ZrbRTi1eRBEmt/roTj5LSqYl3ZY/9akFszJDoHlvnXCp1EgcmJGa8iMVLIrlYWuPxAlgWQTFApyTLYfuWkbLXMbgFOGti7A9uKHxGsiSwHBcwB8jCIUyDCnWQCJ8agxmULwN0j4d7P9aT9Xi/6OoMx3SrNKJnjyR8TOO0HBbOtucvGPLMFkSEU5+X0HW3XesIG5buLL3Tg7MBaqL5rsvaT/zDo=
