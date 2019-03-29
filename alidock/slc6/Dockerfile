@@ -1,13 +1,8 @@
-FROM alisw/slc7-builder
+FROM alisw/slc6-builder
 LABEL maintainer="Dario Berzano <dario.berzano@gmail.com>"
-ADD alonid-llvm-3.9.0.repo /etc/yum.repos.d/alonid-llvm-3.9.0.repo
 RUN rpmdb --rebuilddb && yum clean all && rm -rf /var/cache/yum && \
-    yum -y install xcalc tmux htop bash-completion tig pigz nano ninja-build clang-3.9.0 && \
-    ln -nfs /usr/bin/ninja-build /usr/local/bin/ninja && \
-    ln -nfs /opt/llvm-3.9.0/bin/* /usr/local/bin/ && \
+    yum -y install openssh-server xorg-x11-apps tmux htop bash-completion tig pigz nano && \
     yum clean all && rm -rf /var/cache/yum
-RUN curl -Lo /usr/local/bin/git-clang-format https://llvm.org/svn/llvm-project/cfe/tags/RELEASE_701/final/tools/clang-format/git-clang-format && \
-    chmod 0755 /usr/local/bin/git-clang-format
 RUN cd /tmp && \
     curl -LO https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz && \
     tar xzf cloudflared*.tgz && \
