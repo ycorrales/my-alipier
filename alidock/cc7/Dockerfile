@@ -1,8 +1,10 @@
 FROM alisw/slc7-builder
 LABEL maintainer="Dario Berzano <dario.berzano@gmail.com>"
 ADD alonid-llvm-3.9.0.repo /etc/yum.repos.d/alonid-llvm-3.9.0.repo
+ADD xpra.repo /etc/yum.repos.d/xpra.repo
 RUN rpmdb --rebuilddb && yum clean all && rm -rf /var/cache/yum && \
-    yum -y install xcalc tmux htop bash-completion tig pigz nano ninja-build clang-3.9.0 && \
+    yum install -y xcalc tmux htop bash-completion tig pigz nano ninja-build clang-3.9.0 xterm && \
+    yum install -y xpra-2.5-0.r22138.el7_6.x86_64 && \
     ln -nfs /usr/bin/ninja-build /usr/local/bin/ninja && \
     ln -nfs /opt/llvm-3.9.0/bin/* /usr/local/bin/ && \
     yum clean all && rm -rf /var/cache/yum
