@@ -31,8 +31,12 @@ function fatal() {
 }
 
 DOCKER_ORG=alipier
+EXPECTED_HELLO_WORLD='hello, world!'
 
-if [[ $TRAVIS_PULL_REQUEST != false && $TRAVIS_COMMIT_RANGE ]]; then
+if [[ $RANGE ]]; then
+  # Range manually set
+  DOCKER_PUSH=
+elif [[ $TRAVIS_PULL_REQUEST != false && $TRAVIS_COMMIT_RANGE ]]; then
   # We are testing a Pull Request: do not push
   DOCKER_PUSH=
   RANGE="$TRAVIS_COMMIT_RANGE"
@@ -51,8 +55,22 @@ if [[ $DOCKER_PUSH ]]; then
 fi
 
 # Gather list of what's changed
-fold_start list_changed "List of changed files"
+fold_start list_changed "List of changed files and related symlinks"
   CHANGED=( $(git diff --name-only $RANGE | (grep / || true) | cut -d/ -f1,2 | sort -u) )
+
+  # Find all symlinks pointing to the changed containers
+  while read SYMLINK; do
+    SYMDEST=$(realpath "$SYMLINK")     # resolve path
+    SYMDEST=${SYMDEST:$((${#PWD}+1))}  # make it relative to cwd
+    for CH in "${CHANGED[@]}"; do
+      if [[ $CH == $SYMDEST ]]; then
+        CHANGED+=("$SYMLINK")
+      fi
+    done
+  done < <(find . -type l | sed -e 's!^\./!!')
+
+  CHANGED=( $(for CH in "${CHANGED[@]}"; do echo "$CH"; done | sort -u) )  # remove dups
+
   for CH in "${CHANGED[@]}"; do
     echo "* $CH"
   done
@@ -65,13 +83,13 @@ for DOCK in "${CHANGED[@]}"; do
     DOCKER_IMAGE="$DOCKER_ORG/${DOCK//\//:}"
 
     fold_start docker_build "Build Docker image $DOCKER_IMAGE"
-      docker build . -t "$DOCKER_IMAGE"
+      $DRY_PREFIX docker build . -t "$DOCKER_IMAGE"
     fold_end
 
     fold_start alidock_exec "Test alidock with $DOCKER_IMAGE"
-      alidock stop
-      HELLO_WORLD=$(alidock --no-update-image --image "$DOCKER_IMAGE" exec /bin/echo -n 'hello, world!' | tail -n1)
-      if [[ "$HELLO_WORLD" != 'hello, world!' ]]; then
+      $DRY_PREFIX alidock stop
+      HELLO_WORLD=$($DRY_PREFIX alidock --no-update-image --image "$DOCKER_IMAGE" exec /bin/echo -n "$EXPECTED_HELLO_WORLD" | tail -n1)
+      if [[ "$HELLO_WORLD" != "$EXPECTED_HELLO_WORLD" && ! $DRY_PREFIX ]]; then
         fatal "Container $DOCKER_IMAGE seems not to be usable with $(alidock --version)"
       fi
     fold_end
