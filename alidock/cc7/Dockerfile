@@ -24,4 +24,7 @@ RUN cd /tmp && \
     ./install && \
     cd .. && \
     rm -rf hub-linux*
+RUN cd /usr/local/bin && \
+    curl -L https://github.com/direnv/direnv/releases/download/v2.20.0/direnv.linux-amd64 -o direnv && \
+    chmod 0755 direnv
 RUN pip install alibuild==v1.5.4
