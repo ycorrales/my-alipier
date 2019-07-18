@@ -1,7 +1,7 @@
 alipier/alicuda:alidock.cc7
 ===========================
 
-`alisw/alidock`-based container to support nvidia CUDA runtime and cross-compilation.
+`alisw/alidock`-based container to support NVIDIA CUDA runtime and cross-compilation.
 
 To run it:
 ```bash
