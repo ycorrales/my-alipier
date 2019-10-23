@@ -17,4 +17,4 @@ RUN cd /tmp && \
     ./install && \
     cd .. && \
     rm -rf hub-linux*
-RUN pip install alibuild==v1.5.4
+RUN pip install alibuild==v1.5.5
