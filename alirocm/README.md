@@ -9,5 +9,5 @@ installed._
 
 Run it with Docker with:
 
-    docker pull mconcas/alirocm
+    docker pull alipier/alirocm
     docker run -it --device=/dev/kfd --device=/dev/dri --group-add video mconcas/alirocm
