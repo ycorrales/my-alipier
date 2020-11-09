@@ -54,6 +54,8 @@ if [[ $DOCKER_PUSH ]]; then
   fold_end
 fi
 
+docker info
+
 # Gather list of what's changed
 fold_start list_changed "List of changed files and related symlinks"
   CHANGED=( $(git diff --name-only $RANGE | (grep / || true) | cut -d/ -f1,2 | sort -u) )
@@ -88,6 +90,7 @@ for DOCK in "${CHANGED[@]}"; do
 
     fold_start alidock_exec "Test alidock with $DOCKER_IMAGE"
       $DRY_PREFIX alidock stop
+      $DRY_PREFIX alidock --version
       HELLO_WORLD=$($DRY_PREFIX alidock --no-update-image --image "$DOCKER_IMAGE" exec /bin/echo -n "$EXPECTED_HELLO_WORLD" | tail -n1)
       if [[ "$HELLO_WORLD" != "$EXPECTED_HELLO_WORLD" && ! $DRY_PREFIX ]]; then
         fatal "Container $DOCKER_IMAGE seems not to be usable with $(alidock --version)"
